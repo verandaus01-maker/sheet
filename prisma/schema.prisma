@@ -1,0 +1,230 @@
+// This is your Prisma schema file
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+enum ClientCategory {
+  DIGITAL_MARKETING
+  TRAVEL
+  CONSULTING
+  ECOMMERCE
+  SAAS
+  OTHER
+}
+
+enum PipelineStatus {
+  LEAD
+  PROSPECT
+  NEGOTIATION
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  LOST
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ActivityType {
+  NOTE
+  EMAIL
+  CALL
+  MEETING
+  STATUS_CHANGE
+  TASK_CREATED
+  TASK_COMPLETED
+  FILE_UPLOADED
+  PAYMENT_RECEIVED
+}
+
+model Client {
+  id              String          @id @default(cuid())
+  name            String
+  company         String?
+  email           String
+  phone           String?
+  category        ClientCategory
+  status          PipelineStatus  @default(LEAD)
+
+  // Financial
+  contractValue   Float           @default(0)
+  paidAmount      Float           @default(0)
+  currency        String          @default("USD")
+
+  // Dates
+  firstContact    DateTime        @default(now())
+  lastContact     DateTime        @default(now())
+  expectedClose   DateTime?
+  contractStart   DateTime?
+  contractEnd     DateTime?
+
+  // Engagement
+  healthScore     Int             @default(50) // 0-100
+  priority        TaskPriority    @default(MEDIUM)
+
+  // Metadata
+  tags            String?         // JSON array of tags
+  customFields    String?         // JSON object for custom fields
+  notes           String?
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Relations
+  tasks           Task[]
+  activities      Activity[]
+  projects        Project[]
+  contacts        Contact[]
+  files           File[]
+
+  @@index([status])
+  @@index([category])
+  @@index([healthScore])
+}
+
+model Task {
+  id              String          @id @default(cuid())
+  title           String
+  description     String?
+  status          TaskStatus      @default(TODO)
+  priority        TaskPriority    @default(MEDIUM)
+
+  dueDate         DateTime?
+  completedAt     DateTime?
+
+  // Automation
+  isRecurring     Boolean         @default(false)
+  recurringPattern String?        // JSON for recurring rules
+  reminderDate    DateTime?
+  notificationSent Boolean        @default(false)
+
+  clientId        String
+  client          Client          @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  projectId       String?
+  project         Project?        @relation(fields: [projectId], references: [id])
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([status])
+  @@index([dueDate])
+  @@index([clientId])
+}
+
+model Project {
+  id              String          @id @default(cuid())
+  name            String
+  description     String?
+  status          String          @default("active")
+
+  budget          Float?
+  spent           Float           @default(0)
+
+  startDate       DateTime?
+  endDate         DateTime?
+
+  clientId        String
+  client          Client          @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  tasks           Task[]
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([clientId])
+  @@index([status])
+}
+
+model Activity {
+  id              String          @id @default(cuid())
+  type            ActivityType
+  title           String
+  description     String?
+  metadata        String?         // JSON for additional data
+
+  clientId        String
+  client          Client          @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime        @default(now())
+
+  @@index([clientId])
+  @@index([createdAt])
+}
+
+model Contact {
+  id              String          @id @default(cuid())
+  name            String
+  email           String?
+  phone           String?
+  position        String?
+  isPrimary       Boolean         @default(false)
+
+  clientId        String
+  client          Client          @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([clientId])
+}
+
+model File {
+  id              String          @id @default(cuid())
+  name            String
+  path            String
+  size            Int
+  mimeType        String
+
+  clientId        String
+  client          Client          @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime        @default(now())
+
+  @@index([clientId])
+}
+
+model DailyLog {
+  id              String          @id @default(cuid())
+  date            DateTime        @default(now())
+  notes           String
+  metrics         String?         // JSON for daily metrics
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([date])
+}
+
+model Automation {
+  id              String          @id @default(cuid())
+  name            String
+  description     String?
+  isActive        Boolean         @default(true)
+
+  trigger         String          // JSON for trigger conditions
+  action          String          // JSON for actions to perform
+
+  lastRun         DateTime?
+  nextRun         DateTime?
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}

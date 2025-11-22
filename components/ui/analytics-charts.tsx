@@ -12,6 +12,10 @@ interface AnalyticsChartsProps {
 export function AnalyticsCharts({ data }: AnalyticsChartsProps) {
   if (!data) return null
 
+  const clientsByStatus = Array.isArray(data.clientsByStatus) ? data.clientsByStatus : []
+  const clientsByCategory = Array.isArray(data.clientsByCategory) ? data.clientsByCategory : []
+  const monthlyRevenue = Array.isArray(data.monthlyRevenue) ? data.monthlyRevenue : []
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Client Distribution by Status */}
@@ -20,7 +24,7 @@ export function AnalyticsCharts({ data }: AnalyticsChartsProps) {
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Pie
-              data={data.clientsByStatus}
+              data={clientsByStatus}
               dataKey="count"
               nameKey="status"
               cx="50%"
@@ -28,7 +32,7 @@ export function AnalyticsCharts({ data }: AnalyticsChartsProps) {
               outerRadius={100}
               label={(entry) => `${entry.status}: ${entry.count}`}
             >
-              {data.clientsByStatus?.map((entry: any, index: number) => (
+              {clientsByStatus.map((entry: any, index: number) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
@@ -41,7 +45,7 @@ export function AnalyticsCharts({ data }: AnalyticsChartsProps) {
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
         <h3 className="font-semibold text-lg mb-4">Clients by Category</h3>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={data.clientsByCategory}>
+          <BarChart data={clientsByCategory}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="category" angle={-45} textAnchor="end" height={100} />
             <YAxis />
@@ -52,11 +56,11 @@ export function AnalyticsCharts({ data }: AnalyticsChartsProps) {
       </div>
 
       {/* Monthly Revenue Trend */}
-      {data.monthlyRevenue && data.monthlyRevenue.length > 0 && (
+      {monthlyRevenue.length > 0 && (
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 lg:col-span-2">
           <h3 className="font-semibold text-lg mb-4">Revenue Trend (Last 6 Months)</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={data.monthlyRevenue}>
+            <LineChart data={monthlyRevenue}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />

@@ -96,16 +96,16 @@ export async function GET(request: NextRequest) {
         completedTasks,
         overdueTasks,
       },
-      clientsByCategory: clientsByCategory.map(c => ({
+      clientsByCategory: Array.isArray(clientsByCategory) ? clientsByCategory.map(c => ({
         category: c.category,
         count: c._count,
-      })),
-      clientsByStatus: clientsByStatus.map(c => ({
+      })) : [],
+      clientsByStatus: Array.isArray(clientsByStatus) ? clientsByStatus.map(c => ({
         status: c.status,
         count: c._count,
-      })),
-      monthlyRevenue: Object.values(monthlyRevenue),
-      recentActivities,
+      })) : [],
+      monthlyRevenue: Object.values(monthlyRevenue || {}),
+      recentActivities: Array.isArray(recentActivities) ? recentActivities : [],
     })
   } catch (error) {
     console.error('Error fetching analytics:', error)

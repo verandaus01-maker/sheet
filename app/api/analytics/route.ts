@@ -109,6 +109,22 @@ export async function GET(request: NextRequest) {
     })
   } catch (error) {
     console.error('Error fetching analytics:', error)
-    return NextResponse.json({ error: 'Failed to fetch analytics' }, { status: 500 })
+    return NextResponse.json({
+      overview: {
+        totalClients: 0,
+        activeClients: 0,
+        leadsCount: 0,
+        totalRevenue: 0,
+        paidRevenue: 0,
+        pendingRevenue: 0,
+        totalTasks: 0,
+        completedTasks: 0,
+        overdueTasks: 0,
+      },
+      clientsByCategory: [],
+      clientsByStatus: [],
+      monthlyRevenue: [],
+      recentActivities: [],
+    }, { status: 200 })
   }
 }

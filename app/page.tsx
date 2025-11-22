@@ -407,7 +407,7 @@ export default function Dashboard() {
         </Card>
 
         {/* Recent Activity */}
-        {analytics?.recentActivities && analytics.recentActivities.length > 0 && (
+        {analytics?.recentActivities && Array.isArray(analytics.recentActivities) && analytics.recentActivities.length > 0 && (
           <Card className="mt-6 shadow-md">
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
@@ -416,7 +416,7 @@ export default function Dashboard() {
             <CardContent>
               <div className="space-y-3">
                 {analytics.recentActivities.slice(0, 5).map((activity: any) => (
-                  <div key={activity.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50">
+                  <div key={activity.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                     <div className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-blue-600" />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900">{activity.title}</p>

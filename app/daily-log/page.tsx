@@ -76,18 +76,18 @@ export default function DailyLogPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <header className="glass sticky top-0 z-10 shadow-sm border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" onClick={() => router.push('/')}>
+            <div className="flex items-center gap-4 fade-in">
+              <Button variant="ghost" onClick={() => router.push('/')} className="hover:bg-white/50">
                 <ArrowLeft className="h-5 w-5" />
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Daily Log</h1>
-                <p className="text-sm text-gray-500">Track your daily activities and metrics</p>
+                <h1 className="text-2xl font-bold gradient-text">Daily Log</h1>
+                <p className="text-sm text-gray-600">Track your daily activities and metrics</p>
               </div>
             </div>
           </div>
@@ -97,35 +97,42 @@ export default function DailyLogPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* New Log Entry */}
-          <Card>
+          <Card className="glass border-0 shadow-xl card-hover fade-in stagger-1 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
             <CardHeader>
-              <CardTitle>New Daily Log Entry</CardTitle>
+              <CardTitle className="text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                New Daily Log Entry
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label>Date</Label>
+                <Label className="text-gray-700 font-medium">Date</Label>
                 <Input
                   type="date"
                   value={currentLog.date}
                   onChange={(e) => setCurrentLog({ ...currentLog, date: e.target.value })}
+                  className="bg-white/50 backdrop-blur-sm border-blue-200 focus:ring-blue-500 mt-1"
                 />
               </div>
 
               <div>
-                <Label>Daily Notes</Label>
+                <Label className="text-gray-700 font-medium">Daily Notes</Label>
                 <Textarea
                   placeholder="What did you accomplish today? Any insights or challenges?"
                   value={currentLog.notes}
                   onChange={(e) => setCurrentLog({ ...currentLog, notes: e.target.value })}
                   rows={6}
+                  className="bg-white/50 backdrop-blur-sm border-blue-200 focus:ring-blue-500 mt-1"
                 />
               </div>
 
-              <div className="border-t pt-4">
-                <h3 className="font-semibold mb-3">Daily Metrics</h3>
+              <div className="border-t border-gray-200/50 pt-4">
+                <h3 className="font-bold mb-3 bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+                  Daily Metrics
+                </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>Calls Made</Label>
+                    <Label className="text-gray-700 font-medium">Calls Made</Label>
                     <Input
                       type="number"
                       value={currentLog.metrics.callsMade}
@@ -133,10 +140,11 @@ export default function DailyLogPage() {
                         ...currentLog,
                         metrics: { ...currentLog.metrics, callsMade: parseInt(e.target.value) || 0 }
                       })}
+                      className="bg-white/50 backdrop-blur-sm border-blue-200 focus:ring-blue-500 mt-1"
                     />
                   </div>
                   <div>
-                    <Label>Emails Sent</Label>
+                    <Label className="text-gray-700 font-medium">Emails Sent</Label>
                     <Input
                       type="number"
                       value={currentLog.metrics.emailsSent}
@@ -144,10 +152,11 @@ export default function DailyLogPage() {
                         ...currentLog,
                         metrics: { ...currentLog.metrics, emailsSent: parseInt(e.target.value) || 0 }
                       })}
+                      className="bg-white/50 backdrop-blur-sm border-blue-200 focus:ring-blue-500 mt-1"
                     />
                   </div>
                   <div>
-                    <Label>Meetings Held</Label>
+                    <Label className="text-gray-700 font-medium">Meetings Held</Label>
                     <Input
                       type="number"
                       value={currentLog.metrics.meetingsHeld}
@@ -155,10 +164,11 @@ export default function DailyLogPage() {
                         ...currentLog,
                         metrics: { ...currentLog.metrics, meetingsHeld: parseInt(e.target.value) || 0 }
                       })}
+                      className="bg-white/50 backdrop-blur-sm border-blue-200 focus:ring-blue-500 mt-1"
                     />
                   </div>
                   <div>
-                    <Label>Tasks Completed</Label>
+                    <Label className="text-gray-700 font-medium">Tasks Completed</Label>
                     <Input
                       type="number"
                       value={currentLog.metrics.tasksCompleted}
@@ -166,10 +176,11 @@ export default function DailyLogPage() {
                         ...currentLog,
                         metrics: { ...currentLog.metrics, tasksCompleted: parseInt(e.target.value) || 0 }
                       })}
+                      className="bg-white/50 backdrop-blur-sm border-blue-200 focus:ring-blue-500 mt-1"
                     />
                   </div>
                   <div className="col-span-2">
-                    <Label>Revenue Generated</Label>
+                    <Label className="text-gray-700 font-medium">Revenue Generated ($)</Label>
                     <Input
                       type="number"
                       value={currentLog.metrics.revenue}
@@ -177,12 +188,17 @@ export default function DailyLogPage() {
                         ...currentLog,
                         metrics: { ...currentLog.metrics, revenue: parseFloat(e.target.value) || 0 }
                       })}
+                      className="bg-white/50 backdrop-blur-sm border-blue-200 focus:ring-blue-500 mt-1"
                     />
                   </div>
                 </div>
               </div>
 
-              <Button onClick={handleSave} disabled={saving} className="w-full">
+              <Button
+                onClick={handleSave}
+                disabled={saving}
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all"
+              >
                 <Save className="h-4 w-4 mr-2" />
                 {saving ? 'Saving...' : 'Save Daily Log'}
               </Button>
@@ -191,48 +207,55 @@ export default function DailyLogPage() {
 
           {/* Previous Logs */}
           <div>
-            <Card>
+            <Card className="glass border-0 shadow-xl card-hover fade-in stagger-2 overflow-hidden relative">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-emerald-400/20 to-blue-600/20 rounded-full blur-3xl"></div>
               <CardHeader>
-                <CardTitle>Previous Logs</CardTitle>
+                <CardTitle className="text-xl bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+                  Previous Logs
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4 max-h-[600px] overflow-y-auto">
-                  {logs.map((log: any) => {
+                <div className="space-y-4 max-h-[600px] overflow-y-auto custom-scrollbar">
+                  {logs.map((log: any, index: number) => {
                     const metrics = log.metrics ? JSON.parse(log.metrics) : null
                     return (
-                      <div key={log.id} className="p-4 bg-gray-50 rounded-lg">
+                      <div
+                        key={log.id}
+                        className="p-4 bg-gradient-to-br from-white/80 to-blue-50/30 backdrop-blur-sm rounded-xl border border-blue-100/50 hover:shadow-lg transition-all duration-300 scale-in"
+                        style={{animationDelay: `${index * 0.1}s`}}
+                      >
                         <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2 text-sm font-semibold">
-                            <Calendar className="h-4 w-4" />
+                          <div className="flex items-center gap-2 text-sm font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            <Calendar className="h-4 w-4 text-blue-600" />
                             {formatDate(log.date)}
                           </div>
                         </div>
-                        <p className="text-sm text-gray-700 mb-3 whitespace-pre-wrap">{log.notes}</p>
+                        <p className="text-sm text-gray-700 mb-3 whitespace-pre-wrap leading-relaxed">{log.notes}</p>
                         {metrics && (
                           <div className="grid grid-cols-3 gap-2 text-xs">
                             {metrics.callsMade > 0 && (
-                              <div className="bg-white px-2 py-1 rounded">
-                                <span className="text-gray-500">Calls:</span> <span className="font-semibold">{metrics.callsMade}</span>
+                              <div className="bg-white/80 backdrop-blur-sm px-3 py-2 rounded-lg border border-blue-100 shadow-sm">
+                                <span className="text-gray-600">Calls:</span> <span className="font-bold text-blue-600">{metrics.callsMade}</span>
                               </div>
                             )}
                             {metrics.emailsSent > 0 && (
-                              <div className="bg-white px-2 py-1 rounded">
-                                <span className="text-gray-500">Emails:</span> <span className="font-semibold">{metrics.emailsSent}</span>
+                              <div className="bg-white/80 backdrop-blur-sm px-3 py-2 rounded-lg border border-blue-100 shadow-sm">
+                                <span className="text-gray-600">Emails:</span> <span className="font-bold text-purple-600">{metrics.emailsSent}</span>
                               </div>
                             )}
                             {metrics.meetingsHeld > 0 && (
-                              <div className="bg-white px-2 py-1 rounded">
-                                <span className="text-gray-500">Meetings:</span> <span className="font-semibold">{metrics.meetingsHeld}</span>
+                              <div className="bg-white/80 backdrop-blur-sm px-3 py-2 rounded-lg border border-blue-100 shadow-sm">
+                                <span className="text-gray-600">Meetings:</span> <span className="font-bold text-indigo-600">{metrics.meetingsHeld}</span>
                               </div>
                             )}
                             {metrics.tasksCompleted > 0 && (
-                              <div className="bg-white px-2 py-1 rounded">
-                                <span className="text-gray-500">Tasks:</span> <span className="font-semibold">{metrics.tasksCompleted}</span>
+                              <div className="bg-white/80 backdrop-blur-sm px-3 py-2 rounded-lg border border-blue-100 shadow-sm">
+                                <span className="text-gray-600">Tasks:</span> <span className="font-bold text-emerald-600">{metrics.tasksCompleted}</span>
                               </div>
                             )}
                             {metrics.revenue > 0 && (
-                              <div className="bg-white px-2 py-1 rounded col-span-2">
-                                <span className="text-gray-500">Revenue:</span> <span className="font-semibold">${metrics.revenue}</span>
+                              <div className="bg-gradient-to-r from-emerald-50 to-green-50 backdrop-blur-sm px-3 py-2 rounded-lg border border-emerald-200 shadow-sm col-span-2">
+                                <span className="text-gray-600">Revenue:</span> <span className="font-bold text-emerald-700">${metrics.revenue.toLocaleString()}</span>
                               </div>
                             )}
                           </div>
@@ -240,8 +263,18 @@ export default function DailyLogPage() {
                       </div>
                     )
                   })}
-                  {logs.length === 0 && (
-                    <p className="text-center text-gray-500 py-8">No logs yet. Start by creating your first entry!</p>
+                  {logs.length === 0 && !loading && (
+                    <div className="text-center py-12 fade-in">
+                      <Calendar className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                      <p className="text-gray-600 font-medium">No logs yet</p>
+                      <p className="text-gray-500 text-sm mt-1">Start by creating your first entry!</p>
+                    </div>
+                  )}
+                  {loading && (
+                    <div className="text-center py-12">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                      <p className="mt-4 text-gray-600 text-sm">Loading logs...</p>
+                    </div>
                   )}
                 </div>
               </CardContent>

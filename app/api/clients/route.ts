@@ -21,9 +21,9 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       where.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { company: { contains: search, mode: 'insensitive' } },
-        { email: { contains: search, mode: 'insensitive' } },
+        { name: { contains: search } },
+        { company: { contains: search } },
+        { email: { contains: search } },
       ]
     }
 
@@ -67,12 +67,14 @@ export async function POST(request: NextRequest) {
         company: body.company,
         email: body.email,
         phone: body.phone,
-        category: body.category,
+        category: body.category || 'DIGITAL_MARKETING',
         status: body.status || 'LEAD',
         contractValue: body.contractValue || 0,
         paidAmount: body.paidAmount || 0,
         currency: body.currency || 'USD',
         expectedClose: body.expectedClose ? new Date(body.expectedClose) : null,
+        contractStart: body.contractStart ? new Date(body.contractStart) : null,
+        contractEnd: body.contractEnd ? new Date(body.contractEnd) : null,
         priority: body.priority || 'MEDIUM',
         tags: body.tags ? JSON.stringify(body.tags) : null,
         notes: body.notes,

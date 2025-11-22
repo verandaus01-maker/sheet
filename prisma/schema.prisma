@@ -8,51 +8,7 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-enum ClientCategory {
-  DIGITAL_MARKETING
-  TRAVEL
-  CONSULTING
-  ECOMMERCE
-  SAAS
-  OTHER
-}
-
-enum PipelineStatus {
-  LEAD
-  PROSPECT
-  NEGOTIATION
-  ACTIVE
-  ON_HOLD
-  COMPLETED
-  LOST
-}
-
-enum TaskStatus {
-  TODO
-  IN_PROGRESS
-  REVIEW
-  COMPLETED
-  CANCELLED
-}
-
-enum TaskPriority {
-  LOW
-  MEDIUM
-  HIGH
-  URGENT
-}
-
-enum ActivityType {
-  NOTE
-  EMAIL
-  CALL
-  MEETING
-  STATUS_CHANGE
-  TASK_CREATED
-  TASK_COMPLETED
-  FILE_UPLOADED
-  PAYMENT_RECEIVED
-}
+// Using String instead of enums for SQLite compatibility
 
 model Client {
   id              String          @id @default(cuid())
@@ -60,8 +16,8 @@ model Client {
   company         String?
   email           String
   phone           String?
-  category        ClientCategory
-  status          PipelineStatus  @default(LEAD)
+  category        String          @default("DIGITAL_MARKETING") // DIGITAL_MARKETING, TRAVEL, CONSULTING, ECOMMERCE, SAAS, OTHER
+  status          String          @default("LEAD") // LEAD, PROSPECT, NEGOTIATION, ACTIVE, ON_HOLD, COMPLETED, LOST
 
   // Financial
   contractValue   Float           @default(0)
@@ -77,7 +33,7 @@ model Client {
 
   // Engagement
   healthScore     Int             @default(50) // 0-100
-  priority        TaskPriority    @default(MEDIUM)
+  priority        String          @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
 
   // Metadata
   tags            String?         // JSON array of tags
@@ -103,8 +59,8 @@ model Task {
   id              String          @id @default(cuid())
   title           String
   description     String?
-  status          TaskStatus      @default(TODO)
-  priority        TaskPriority    @default(MEDIUM)
+  status          String          @default("TODO") // TODO, IN_PROGRESS, REVIEW, COMPLETED, CANCELLED
+  priority        String          @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
 
   dueDate         DateTime?
   completedAt     DateTime?
@@ -155,7 +111,7 @@ model Project {
 
 model Activity {
   id              String          @id @default(cuid())
-  type            ActivityType
+  type            String          // NOTE, EMAIL, CALL, MEETING, STATUS_CHANGE, TASK_CREATED, TASK_COMPLETED, FILE_UPLOADED, PAYMENT_RECEIVED
   title           String
   description     String?
   metadata        String?         // JSON for additional data

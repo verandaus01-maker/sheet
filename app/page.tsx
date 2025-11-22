@@ -44,9 +44,11 @@ export default function Dashboard() {
       ])
 
       setAnalytics(analyticsData)
-      setClients(clientsData)
+      setClients(Array.isArray(clientsData) ? clientsData : [])
     } catch (error) {
       console.error('Error fetching data:', error)
+      setClients([])
+      setAnalytics(null)
     } finally {
       setLoading(false)
     }
@@ -83,12 +85,12 @@ export default function Dashboard() {
     }
   }
 
-  const filteredClients = clients.filter(client =>
+  const filteredClients = Array.isArray(clients) ? clients.filter(client =>
     searchQuery === '' ||
-    client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    client.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     client.company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    client.email.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+    client.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  ) : []
 
   if (loading && !analytics) {
     return (

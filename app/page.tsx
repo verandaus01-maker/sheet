@@ -104,16 +104,16 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+      <header className="glass sticky top-0 z-10 shadow-sm border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <div className="fade-in">
+              <h1 className="text-3xl font-bold gradient-text">
                 Client Management System
               </h1>
-              <p className="text-sm text-gray-500 mt-1">Advanced dashboard for managing all your clients</p>
+              <p className="text-sm text-gray-600 mt-1">Advanced dashboard for managing all your clients</p>
             </div>
             <div className="flex items-center gap-3">
               <Button variant="outline" size="sm" onClick={fetchData} disabled={loading}>
@@ -138,54 +138,67 @@ export default function Dashboard() {
         {analytics && analytics.overview && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <Card className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-600">
+              <Card className="glass card-hover glow fade-in stagger-1 border-0 overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/20 to-blue-600/20 rounded-full blur-2xl"></div>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Clients</CardTitle>
-                  <Users className="h-5 w-5 text-blue-600" />
+                  <CardTitle className="text-sm font-medium text-gray-700">Total Clients</CardTitle>
+                  <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-3 rounded-xl shadow-lg">
+                    <Users className="h-5 w-5 text-white" />
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold">{analytics.overview.totalClients || 0}</div>
-                  <p className="text-xs text-green-600 mt-1 flex items-center">
+                  <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent count-up">
+                    {analytics.overview.totalClients || 0}
+                  </div>
+                  <p className="text-xs text-green-600 mt-2 flex items-center font-medium">
                     <TrendingUp className="inline h-3 w-3 mr-1" />
                     {analytics.overview.activeClients || 0} active
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-600 mt-1">
                     {analytics.overview.leadsCount || 0} leads in pipeline
                   </p>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg transition-shadow border-l-4 border-l-green-600">
+              <Card className="glass card-hover glow fade-in stagger-2 border-0 overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-400/20 to-green-600/20 rounded-full blur-2xl"></div>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-                  <DollarSign className="h-5 w-5 text-green-600" />
+                  <CardTitle className="text-sm font-medium text-gray-700">Total Revenue</CardTitle>
+                  <div className="bg-gradient-to-br from-green-500 to-green-600 p-3 rounded-xl shadow-lg">
+                    <DollarSign className="h-5 w-5 text-white" />
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold">
+                  <div className="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-700 bg-clip-text text-transparent count-up">
                     {formatCurrency(analytics.overview.totalRevenue || 0)}
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-600 mt-2 font-medium">
                     {formatCurrency(analytics.overview.paidRevenue || 0)} paid
                   </p>
-                  <p className="text-xs text-orange-600 mt-1">
+                  <p className="text-xs text-orange-600 mt-1 font-medium">
                     {formatCurrency(analytics.overview.pendingRevenue || 0)} pending
                   </p>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg transition-shadow border-l-4 border-l-purple-600">
+              <Card className="glass card-hover glow fade-in stagger-3 border-0 overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-400/20 to-purple-600/20 rounded-full blur-2xl"></div>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Tasks</CardTitle>
-                  <CheckCircle className="h-5 w-5 text-purple-600" />
+                  <CardTitle className="text-sm font-medium text-gray-700">Tasks</CardTitle>
+                  <div className="bg-gradient-to-br from-purple-500 to-purple-600 p-3 rounded-xl shadow-lg">
+                    <CheckCircle className="h-5 w-5 text-white" />
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold">{analytics.overview.totalTasks || 0}</div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <div className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent count-up">
+                    {analytics.overview.totalTasks || 0}
+                  </div>
+                  <p className="text-xs text-gray-600 mt-2 font-medium">
                     {analytics.overview.completedTasks || 0} completed
                   </p>
-                  <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+                  <div className="mt-2 w-full bg-gray-200/50 rounded-full h-2 overflow-hidden">
                     <div
-                      className="bg-purple-600 h-2 rounded-full"
+                      className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-1000 ease-out"
                       style={{
                         width: `${(analytics.overview.totalTasks || 0) > 0
                           ? ((analytics.overview.completedTasks || 0) / (analytics.overview.totalTasks || 1)) * 100
@@ -196,58 +209,64 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg transition-shadow border-l-4 border-l-red-600">
+              <Card className="glass card-hover fade-in stagger-4 border-0 overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-red-400/20 to-red-600/20 rounded-full blur-2xl"></div>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Overdue Tasks</CardTitle>
-                  <AlertCircle className="h-5 w-5 text-red-600" />
+                  <CardTitle className="text-sm font-medium text-gray-700">Overdue Tasks</CardTitle>
+                  <div className="bg-gradient-to-br from-red-500 to-red-600 p-3 rounded-xl shadow-lg pulse-slow">
+                    <AlertCircle className="h-5 w-5 text-white" />
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold text-red-600">
+                  <div className="text-4xl font-bold bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent count-up">
                     {analytics.overview.overdueTasks || 0}
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Requires immediate attention</p>
+                  <p className="text-xs text-gray-600 mt-2">Requires immediate attention</p>
                   {(analytics.overview.overdueTasks || 0) > 0 && (
-                    <p className="text-xs text-red-600 mt-2 font-semibold">Action needed!</p>
+                    <p className="text-xs text-red-600 mt-2 font-bold animate-pulse">⚠️ Action needed!</p>
                   )}
                 </CardContent>
               </Card>
             </div>
 
             {/* Charts Section */}
-            <div className="mb-8">
+            <div className="mb-8 fade-in">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-gray-900">Analytics & Insights</h2>
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  Analytics & Insights
+                </h2>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setShowCharts(!showCharts)}
+                  className="glass border-white/20 hover:shadow-lg transition-all"
                 >
                   <BarChart3 className="h-4 w-4 mr-2" />
                   {showCharts ? 'Hide Charts' : 'Show Charts'}
                 </Button>
               </div>
-              {showCharts && <AnalyticsCharts data={analytics} />}
+              {showCharts && <div className="scale-in"><AnalyticsCharts data={analytics} /></div>}
             </div>
           </>
         )}
 
         {/* Filters and Search */}
-        <Card className="mb-6 shadow-md">
+        <Card className="mb-6 glass border-0 shadow-lg fade-in">
           <CardContent className="pt-6">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blue-500" />
                 <input
                   type="text"
                   placeholder="Search clients by name, company, or email..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white/50 backdrop-blur-sm border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               <div className="flex gap-2 flex-wrap">
                 <select
-                  className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  className="px-4 py-2.5 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/50 backdrop-blur-sm shadow-sm transition-all hover:shadow-md"
                   value={filter.status}
                   onChange={(e) => setFilter({ ...filter, status: e.target.value })}
                 >
@@ -261,7 +280,7 @@ export default function Dashboard() {
                   <option value="LOST">Lost</option>
                 </select>
                 <select
-                  className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  className="px-4 py-2.5 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/50 backdrop-blur-sm shadow-sm transition-all hover:shadow-md"
                   value={filter.category}
                   onChange={(e) => setFilter({ ...filter, category: e.target.value })}
                 >
@@ -305,12 +324,14 @@ export default function Dashboard() {
         </Card>
 
         {/* Clients Table */}
-        <Card className="shadow-md">
+        <Card className="glass border-0 shadow-xl fade-in">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Clients ({filteredClients.length})</CardTitle>
-                <CardDescription>Manage and track all your clients</CardDescription>
+                <CardTitle className="text-2xl bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  Clients ({filteredClients.length})
+                </CardTitle>
+                <CardDescription className="text-gray-600">Manage and track all your clients</CardDescription>
               </div>
               {filteredClients.length > 0 && (
                 <div className="text-sm text-gray-500">
@@ -334,8 +355,8 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredClients.map((client) => (
-                    <tr key={client.id} className="border-b border-gray-100 hover:bg-blue-50 transition-colors">
+                  {filteredClients.map((client, index) => (
+                    <tr key={client.id} className="border-b border-gray-100/50 hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/50 transition-all duration-300 fade-in" style={{animationDelay: `${index * 0.05}s`}}>
                       <td className="py-4 px-4">
                         <div>
                           <div className="font-medium text-gray-900">{client.name}</div>
@@ -408,20 +429,22 @@ export default function Dashboard() {
 
         {/* Recent Activity */}
         {analytics?.recentActivities && Array.isArray(analytics.recentActivities) && analytics.recentActivities.length > 0 && (
-          <Card className="mt-6 shadow-md">
+          <Card className="mt-6 glass border-0 shadow-xl fade-in">
             <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>Latest updates across all clients</CardDescription>
+              <CardTitle className="text-2xl bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Recent Activity
+              </CardTitle>
+              <CardDescription className="text-gray-600">Latest updates across all clients</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {analytics.recentActivities.slice(0, 5).map((activity: any) => (
-                  <div key={activity.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-blue-600" />
+                {analytics.recentActivities.slice(0, 5).map((activity: any, index: number) => (
+                  <div key={activity.id} className="flex items-start gap-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-purple-50/50 transition-all duration-300 scale-in border border-gray-100/50" style={{animationDelay: `${index * 0.1}s`}}>
+                    <div className="flex-shrink-0 w-3 h-3 mt-1.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900">{activity.title}</p>
-                      <p className="text-sm text-gray-600">{activity.client?.name || 'Unknown'}</p>
-                      <p className="text-xs text-gray-400 mt-1">{formatDate(activity.createdAt)}</p>
+                      <p className="text-sm font-semibold text-gray-900">{activity.title}</p>
+                      <p className="text-sm text-gray-700 font-medium">{activity.client?.name || 'Unknown'}</p>
+                      <p className="text-xs text-gray-500 mt-1">{formatDate(activity.createdAt)}</p>
                     </div>
                   </div>
                 ))}

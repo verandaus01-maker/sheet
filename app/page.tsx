@@ -135,7 +135,7 @@ export default function Dashboard() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Overview */}
-        {analytics && (
+        {analytics && analytics.overview && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <Card className="hover:shadow-lg transition-shadow border-l-4 border-l-blue-600">
@@ -144,13 +144,13 @@ export default function Dashboard() {
                   <Users className="h-5 w-5 text-blue-600" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold">{analytics.overview.totalClients}</div>
+                  <div className="text-3xl font-bold">{analytics.overview.totalClients || 0}</div>
                   <p className="text-xs text-green-600 mt-1 flex items-center">
                     <TrendingUp className="inline h-3 w-3 mr-1" />
-                    {analytics.overview.activeClients} active
+                    {analytics.overview.activeClients || 0} active
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    {analytics.overview.leadsCount} leads in pipeline
+                    {analytics.overview.leadsCount || 0} leads in pipeline
                   </p>
                 </CardContent>
               </Card>
@@ -162,13 +162,13 @@ export default function Dashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold">
-                    {formatCurrency(analytics.overview.totalRevenue)}
+                    {formatCurrency(analytics.overview.totalRevenue || 0)}
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
-                    {formatCurrency(analytics.overview.paidRevenue)} paid
+                    {formatCurrency(analytics.overview.paidRevenue || 0)} paid
                   </p>
                   <p className="text-xs text-orange-600 mt-1">
-                    {formatCurrency(analytics.overview.pendingRevenue)} pending
+                    {formatCurrency(analytics.overview.pendingRevenue || 0)} pending
                   </p>
                 </CardContent>
               </Card>
@@ -179,16 +179,16 @@ export default function Dashboard() {
                   <CheckCircle className="h-5 w-5 text-purple-600" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold">{analytics.overview.totalTasks}</div>
+                  <div className="text-3xl font-bold">{analytics.overview.totalTasks || 0}</div>
                   <p className="text-xs text-gray-500 mt-1">
-                    {analytics.overview.completedTasks} completed
+                    {analytics.overview.completedTasks || 0} completed
                   </p>
                   <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
                     <div
                       className="bg-purple-600 h-2 rounded-full"
                       style={{
-                        width: `${analytics.overview.totalTasks > 0
-                          ? (analytics.overview.completedTasks / analytics.overview.totalTasks) * 100
+                        width: `${(analytics.overview.totalTasks || 0) > 0
+                          ? ((analytics.overview.completedTasks || 0) / (analytics.overview.totalTasks || 1)) * 100
                           : 0}%`
                       }}
                     />
@@ -203,10 +203,10 @@ export default function Dashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold text-red-600">
-                    {analytics.overview.overdueTasks}
+                    {analytics.overview.overdueTasks || 0}
                   </div>
                   <p className="text-xs text-gray-500 mt-1">Requires immediate attention</p>
-                  {analytics.overview.overdueTasks > 0 && (
+                  {(analytics.overview.overdueTasks || 0) > 0 && (
                     <p className="text-xs text-red-600 mt-2 font-semibold">Action needed!</p>
                   )}
                 </CardContent>

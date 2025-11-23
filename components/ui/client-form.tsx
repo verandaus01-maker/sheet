@@ -1,14 +1,15 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './dialog'
 import { Button } from './button'
 import { Input } from './input'
 import { Label } from './label'
 import { Select } from './select'
 import { Textarea } from './textarea'
-import { X, HelpCircle, Info } from 'lucide-react'
+import { X, HelpCircle, Info, Languages } from 'lucide-react'
 import { getStatusDefinition, getPriorityDefinition } from '@/lib/utils'
+import { getTranslation, type Language } from '@/lib/translations'
 
 interface ClientFormProps {
   open: boolean
@@ -19,8 +20,12 @@ interface ClientFormProps {
 
 export function ClientForm({ open, onOpenChange, onSuccess, initialData }: ClientFormProps) {
   const [loading, setLoading] = useState(false)
+  const [lang, setLang] = useState<Language>('en')
   const [showStatusHelp, setShowStatusHelp] = useState(false)
   const [showPriorityHelp, setShowPriorityHelp] = useState(false)
+
+  const t = useCallback((key: any) => getTranslation(lang, key), [lang])
+
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
     company: initialData?.company || '',
@@ -136,100 +141,111 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
       <DialogContent className="max-w-5xl max-h-[95vh] overflow-y-auto glass border-0 shadow-2xl">
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-2xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              {initialData ? 'Edit Client' : 'Add New Client'}
-            </DialogTitle>
+            <div className="flex items-center gap-3">
+              <DialogTitle className="text-2xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                {initialData ? t('editClient') : t('addClient')}
+              </DialogTitle>
+              <button
+                onClick={() => setLang(lang === 'en' ? 'hi' : 'en')}
+                className="flex items-center gap-1 px-3 py-1.5 text-xs bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-lg hover:from-orange-600 hover:to-pink-600 transition-all shadow-md"
+                type="button"
+              >
+                <Languages className="h-3 w-3" />
+                {lang === 'en' ? 'हिंदी' : 'English'}
+              </button>
+            </div>
             <button
               onClick={() => onOpenChange(false)}
               className="text-gray-400 hover:text-gray-600 transition-colors"
+              type="button"
             >
               <X className="h-5 w-5" />
             </button>
           </div>
-          <p className="text-sm text-gray-600">Enter comprehensive client information for better tracking and management</p>
+          <p className="text-sm text-gray-600">{t('formSubtitle')}</p>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           {/* Basic Information */}
           <div className="space-y-4 glass p-5 rounded-xl border-0">
             <h3 className="font-bold text-lg bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent flex items-center gap-2">
-              📋 Basic Information
+              {t('basicInfo')}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="name" className="text-gray-700 font-medium">Full Name *</Label>
+                <Label htmlFor="name" className="text-gray-700 font-medium">{t('fullName')} *</Label>
                 <Input
                   id="name"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="John Doe"
+                  placeholder={t('phName')}
                   className="bg-white/50 backdrop-blur-sm border-blue-200 focus:ring-blue-500 mt-1"
                 />
               </div>
               <div>
-                <Label htmlFor="company" className="text-gray-700 font-medium">Company/Organization</Label>
+                <Label htmlFor="company" className="text-gray-700 font-medium">{t('companyOrg')}</Label>
                 <Input
                   id="company"
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  placeholder="Acme Corporation"
+                  placeholder={t('phCompany')}
                   className="bg-white/50 backdrop-blur-sm border-blue-200 focus:ring-blue-500 mt-1"
                 />
               </div>
               <div>
-                <Label htmlFor="email" className="text-gray-700 font-medium">Email *</Label>
+                <Label htmlFor="email" className="text-gray-700 font-medium">{t('email')} *</Label>
                 <Input
                   id="email"
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="john@example.com"
+                  placeholder={t('phEmail')}
                   className="bg-white/50 backdrop-blur-sm border-blue-200 focus:ring-blue-500 mt-1"
                 />
               </div>
               <div>
-                <Label htmlFor="phone" className="text-gray-700 font-medium">Primary Phone</Label>
+                <Label htmlFor="phone" className="text-gray-700 font-medium">{t('primaryPhone')}</Label>
                 <Input
                   id="phone"
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="+91-98765-43210"
+                  placeholder={t('phPhone')}
                   className="bg-white/50 backdrop-blur-sm border-blue-200 focus:ring-blue-500 mt-1"
                 />
               </div>
               <div>
-                <Label htmlFor="alternatePhone" className="text-gray-700 font-medium">Alternate Phone</Label>
+                <Label htmlFor="alternatePhone" className="text-gray-700 font-medium">{t('alternatePhone')}</Label>
                 <Input
                   id="alternatePhone"
                   type="tel"
                   value={formData.alternatePhone}
                   onChange={(e) => setFormData({ ...formData, alternatePhone: e.target.value })}
-                  placeholder="+91-98765-43211"
+                  placeholder={t('phPhone')}
                   className="bg-white/50 backdrop-blur-sm border-blue-200 focus:ring-blue-500 mt-1"
                 />
               </div>
               <div>
-                <Label htmlFor="whatsapp" className="text-gray-700 font-medium">WhatsApp Number</Label>
+                <Label htmlFor="whatsapp" className="text-gray-700 font-medium">{t('whatsappNumber')}</Label>
                 <Input
                   id="whatsapp"
                   type="tel"
                   value={formData.whatsapp}
                   onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
-                  placeholder="+91-98765-43210"
+                  placeholder={t('phPhone')}
                   className="bg-white/50 backdrop-blur-sm border-blue-200 focus:ring-blue-500 mt-1"
                 />
               </div>
               <div className="md:col-span-2">
-                <Label htmlFor="website" className="text-gray-700 font-medium">Website</Label>
+                <Label htmlFor="website" className="text-gray-700 font-medium">{t('website')}</Label>
                 <Input
                   id="website"
                   type="url"
                   value={formData.website}
                   onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                  placeholder="https://www.example.com"
+                  placeholder={t('phWebsite')}
                   className="bg-white/50 backdrop-blur-sm border-blue-200 focus:ring-blue-500 mt-1"
                 />
               </div>
@@ -239,7 +255,7 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
           {/* Business Details */}
           <div className="space-y-4 glass p-5 rounded-xl border-0">
             <h3 className="font-bold text-lg bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent flex items-center gap-2">
-              🏢 Business Details
+              {t('businessDetails')}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
@@ -749,14 +765,14 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
           {/* Actions */}
           <div className="flex justify-end gap-3 pt-4 border-t sticky bottom-0 bg-white/90 backdrop-blur-sm p-4 -mx-6 -mb-6 rounded-b-xl">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              {t('cancel')}
             </Button>
             <Button
               type="submit"
               disabled={loading}
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg"
             >
-              {loading ? 'Saving...' : initialData ? '💾 Update Client' : '✨ Create Client'}
+              {loading ? t('save') : initialData ? t('updateClient') : t('createClient')}
             </Button>
           </div>
         </form>

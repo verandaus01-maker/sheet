@@ -635,7 +635,7 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
                 />
               </div>
               <div>
-                <Label htmlFor="pendingWork" className="text-gray-700 font-medium">What's Pending/Remaining?</Label>
+                <Label htmlFor="pendingWork" className="text-gray-700 font-medium">What&apos;s Pending/Remaining?</Label>
                 <Textarea
                   id="pendingWork"
                   value={formData.pendingWork}

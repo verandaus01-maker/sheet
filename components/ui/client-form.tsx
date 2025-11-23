@@ -1,13 +1,13 @@
 "use client"
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, memo } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './dialog'
 import { Button } from './button'
 import { Input } from './input'
 import { Label } from './label'
 import { Select } from './select'
 import { Textarea } from './textarea'
-import { X, HelpCircle, Info, Languages } from 'lucide-react'
+import { X, HelpCircle, Info, Languages, ChevronDown, ChevronUp } from 'lucide-react'
 import { getStatusDefinition, getPriorityDefinition } from '@/lib/utils'
 import { getTranslation, type Language } from '@/lib/translations'
 
@@ -17,6 +17,27 @@ interface ClientFormProps {
   onSuccess?: () => void
   initialData?: any
 }
+
+// Memoized form sections to prevent unnecessary re-renders
+const CollapsibleSection = memo(({ title, children, defaultOpen = true }: { title: string, children: React.ReactNode, defaultOpen?: boolean }) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen)
+
+  return (
+    <div className="space-y-4 glass p-5 rounded-xl border-0">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between font-bold text-lg bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
+      >
+        {title}
+        {isOpen ? <ChevronUp className="h-5 w-5 text-blue-600" /> : <ChevronDown className="h-5 w-5 text-blue-600" />}
+      </button>
+      {isOpen && children}
+    </div>
+  )
+})
+
+CollapsibleSection.displayName = 'CollapsibleSection'
 
 export function ClientForm({ open, onOpenChange, onSuccess, initialData }: ClientFormProps) {
   const [loading, setLoading] = useState(false)
@@ -165,8 +186,8 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
           <p className="text-sm text-gray-600">{t('formSubtitle')}</p>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6 mt-4">
-          {/* Basic Information */}
+        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+          {/* Basic Information - Always visible */}
           <div className="space-y-4 glass p-5 rounded-xl border-0">
             <h3 className="font-bold text-lg bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent flex items-center gap-2">
               {t('basicInfo')}
@@ -252,11 +273,8 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
             </div>
           </div>
 
-          {/* Business Details */}
-          <div className="space-y-4 glass p-5 rounded-xl border-0">
-            <h3 className="font-bold text-lg bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent flex items-center gap-2">
-              {t('businessDetails')}
-            </h3>
+          {/* Business Details - Collapsible */}
+          <CollapsibleSection title={t('businessDetails')} defaultOpen={false}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <Label htmlFor="category" className="text-gray-700 font-medium">Service Category *</Label>
@@ -301,13 +319,10 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
                 </Select>
               </div>
             </div>
-          </div>
+          </CollapsibleSection>
 
-          {/* Location */}
-          <div className="space-y-4 glass p-5 rounded-xl border-0">
-            <h3 className="font-bold text-lg bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent flex items-center gap-2">
-              📍 Location Details
-            </h3>
+          {/* Location - Collapsible */}
+          <CollapsibleSection title="📍 Location Details" defaultOpen={false}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
                 <Label htmlFor="address" className="text-gray-700 font-medium">Street Address</Label>
@@ -350,13 +365,10 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
                 />
               </div>
             </div>
-          </div>
+          </CollapsibleSection>
 
-          {/* Lead Information */}
-          <div className="space-y-4 glass p-5 rounded-xl border-0">
-            <h3 className="font-bold text-lg bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent flex items-center gap-2">
-              🎯 Lead Information
-            </h3>
+          {/* Lead Information - Collapsible */}
+          <CollapsibleSection title="🎯 Lead Information" defaultOpen={false}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="leadSource" className="text-gray-700 font-medium">How did they find us?</Label>
@@ -388,9 +400,9 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
                 />
               </div>
             </div>
-          </div>
+          </CollapsibleSection>
 
-          {/* Status & Priority */}
+          {/* Status & Priority - Always visible */}
           <div className="space-y-4 glass p-5 rounded-xl border-0">
             <h3 className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2">
               ⚡ Status & Priority
@@ -473,11 +485,8 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
             </div>
           </div>
 
-          {/* Financial Information */}
-          <div className="space-y-4 glass p-5 rounded-xl border-0">
-            <h3 className="font-bold text-lg bg-gradient-to-r from-green-600 to-emerald-700 bg-clip-text text-transparent flex items-center gap-2">
-              💰 Financial Information
-            </h3>
+          {/* Financial Information - Collapsible */}
+          <CollapsibleSection title="💰 Financial Information" defaultOpen={false}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <Label htmlFor="contractValue" className="text-gray-700 font-medium">Total Contract Value</Label>
@@ -554,13 +563,10 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
                 />
               </div>
             </div>
-          </div>
+          </CollapsibleSection>
 
-          {/* Important Dates */}
-          <div className="space-y-4 glass p-5 rounded-xl border-0">
-            <h3 className="font-bold text-lg bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2">
-              📅 Important Dates
-            </h3>
+          {/* Important Dates - Collapsible */}
+          <CollapsibleSection title="📅 Important Dates" defaultOpen={false}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="nextFollowUp" className="text-gray-700 font-medium">Next Follow-Up Date</Label>
@@ -603,13 +609,10 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
                 />
               </div>
             </div>
-          </div>
+          </CollapsibleSection>
 
-          {/* Progress & Work Status */}
-          <div className="space-y-4 glass p-5 rounded-xl border-0">
-            <h3 className="font-bold text-lg bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent flex items-center gap-2">
-              📊 Progress & Work Status
-            </h3>
+          {/* Progress & Work Status - Collapsible */}
+          <CollapsibleSection title="📊 Progress & Work Status" defaultOpen={false}>
             <div className="grid grid-cols-1 gap-4">
               <div>
                 <Label htmlFor="overallProgress" className="text-gray-700 font-medium">Overall Progress (%)</Label>
@@ -662,13 +665,10 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
                 />
               </div>
             </div>
-          </div>
+          </CollapsibleSection>
 
-          {/* Team & Communication */}
-          <div className="space-y-4 glass p-5 rounded-xl border-0">
-            <h3 className="font-bold text-lg bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent flex items-center gap-2">
-              👥 Team & Communication Preferences
-            </h3>
+          {/* Team & Communication - Collapsible */}
+          <CollapsibleSection title="👥 Team & Communication" defaultOpen={false}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="accountManager" className="text-gray-700 font-medium">Account Manager</Label>
@@ -728,13 +728,10 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
                 </Select>
               </div>
             </div>
-          </div>
+          </CollapsibleSection>
 
-          {/* Notes */}
-          <div className="space-y-4 glass p-5 rounded-xl border-0">
-            <h3 className="font-bold text-lg bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent flex items-center gap-2">
-              📝 Additional Notes
-            </h3>
+          {/* Notes - Collapsible */}
+          <CollapsibleSection title="📝 Additional Notes" defaultOpen={false}>
             <div className="space-y-4">
               <div>
                 <Label htmlFor="notes" className="text-gray-700 font-medium">Client Notes (Shareable)</Label>
@@ -760,7 +757,7 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
                 <p className="text-xs text-gray-500 mt-1">🔒 These notes are private and not visible to clients</p>
               </div>
             </div>
-          </div>
+          </CollapsibleSection>
 
           {/* Actions */}
           <div className="flex justify-end gap-3 pt-4 border-t sticky bottom-0 bg-white/90 backdrop-blur-sm p-4 -mx-6 -mb-6 rounded-b-xl">

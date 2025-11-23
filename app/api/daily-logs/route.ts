@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(logs)
   } catch (error) {
     console.error('Error fetching daily logs:', error)
-    return NextResponse.json({ error: 'Failed to fetch daily logs' }, { status: 500 })
+    return NextResponse.json([])
   }
 }
 

@@ -35,9 +35,10 @@ export default function DailyLogPage() {
     try {
       const res = await fetch('/api/daily-logs')
       const data = await res.json()
-      setLogs(data)
+      setLogs(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Error fetching logs:', error)
+      setLogs([])
     } finally {
       setLoading(false)
     }
@@ -216,7 +217,7 @@ export default function DailyLogPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4 max-h-[600px] overflow-y-auto custom-scrollbar">
-                  {logs.map((log: any, index: number) => {
+                  {Array.isArray(logs) && logs.map((log: any, index: number) => {
                     const metrics = log.metrics ? JSON.parse(log.metrics) : null
                     return (
                       <div

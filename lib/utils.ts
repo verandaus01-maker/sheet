@@ -5,8 +5,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatCurrency(amount: number, currency: string = "USD"): string {
-  return new Intl.NumberFormat("en-US", {
+export function formatCurrency(amount: number, currency: string = "INR"): string {
+  return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: currency,
   }).format(amount)
@@ -121,4 +121,104 @@ export function exportToCSV(data: any[], filename: string): void {
   link.href = URL.createObjectURL(blob)
   link.download = `${filename}.csv`
   link.click()
+}
+
+// Status definitions and guidance
+export function getStatusDefinition(status: string): { title: string; description: string; when: string } {
+  const definitions: Record<string, { title: string; description: string; when: string }> = {
+    LEAD: {
+      title: "Lead",
+      description: "Initial contact or inquiry received. Potential client showing interest.",
+      when: "Use when: New inquiry, first contact made, collecting basic information"
+    },
+    PROSPECT: {
+      title: "Prospect",
+      description: "Qualified lead actively engaged in discussions. Mutual interest confirmed.",
+      when: "Use when: Had meaningful conversation, needs identified, proposal being prepared"
+    },
+    NEGOTIATION: {
+      title: "Negotiation",
+      description: "Actively negotiating terms, pricing, and contract details.",
+      when: "Use when: Proposal sent, discussing terms, finalizing pricing and deliverables"
+    },
+    ACTIVE: {
+      title: "Active",
+      description: "Contract signed and project/service delivery in progress.",
+      when: "Use when: Deal closed, actively working on project, regular communication happening"
+    },
+    ON_HOLD: {
+      title: "On Hold",
+      description: "Project temporarily paused. Client still engaged but work suspended.",
+      when: "Use when: Client requested pause, waiting for resources, seasonal break"
+    },
+    COMPLETED: {
+      title: "Completed",
+      description: "Project successfully finished and delivered. Contract fulfilled.",
+      when: "Use when: All deliverables done, final payment received, client satisfied"
+    },
+    LOST: {
+      title: "Lost",
+      description: "Client chose not to proceed or went with competitor.",
+      when: "Use when: Deal lost, client unresponsive, chose another provider"
+    }
+  }
+  return definitions[status] || { title: status, description: "No description", when: "" }
+}
+
+// Priority definitions and guidance
+export function getPriorityDefinition(priority: string): { title: string; description: string; when: string } {
+  const definitions: Record<string, { title: string; description: string; when: string }> = {
+    LOW: {
+      title: "Low Priority",
+      description: "No urgency. Can be handled in regular workflow.",
+      when: "Use when: No deadline pressure, routine maintenance, future opportunities"
+    },
+    MEDIUM: {
+      title: "Medium Priority",
+      description: "Important but not critical. Should be addressed within normal timeframe.",
+      when: "Use when: Standard projects, regular follow-ups, scheduled deliverables"
+    },
+    HIGH: {
+      title: "High Priority",
+      description: "Requires prompt attention. Important client or approaching deadline.",
+      when: "Use when: Key client, deadline within week, significant revenue potential"
+    },
+    URGENT: {
+      title: "Urgent",
+      description: "Critical and time-sensitive. Requires immediate action.",
+      when: "Use when: Immediate deadline, client escalation, crisis management needed"
+    }
+  }
+  return definitions[priority] || { title: priority, description: "No description", when: "" }
+}
+
+// Task status definitions
+export function getTaskStatusDefinition(status: string): { title: string; description: string } {
+  const definitions: Record<string, { title: string; description: string }> = {
+    TODO: {
+      title: "To Do",
+      description: "Task identified but not started yet"
+    },
+    IN_PROGRESS: {
+      title: "In Progress",
+      description: "Actively being worked on"
+    },
+    BLOCKED: {
+      title: "Blocked",
+      description: "Cannot proceed due to dependency or issue"
+    },
+    REVIEW: {
+      title: "In Review",
+      description: "Completed and awaiting review/approval"
+    },
+    COMPLETED: {
+      title: "Completed",
+      description: "Finished and approved"
+    },
+    CANCELLED: {
+      title: "Cancelled",
+      description: "No longer needed or relevant"
+    }
+  }
+  return definitions[status] || { title: status, description: "No description" }
 }

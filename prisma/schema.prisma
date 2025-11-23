@@ -16,29 +16,70 @@ model Client {
   company         String?
   email           String
   phone           String?
-  category        String          @default("DIGITAL_MARKETING") // DIGITAL_MARKETING, TRAVEL, CONSULTING, ECOMMERCE, SAAS, OTHER
-  status          String          @default("LEAD") // LEAD, PROSPECT, NEGOTIATION, ACTIVE, ON_HOLD, COMPLETED, LOST
+  alternatePhone  String?
+  whatsapp        String?
 
-  // Financial
+  // Business Details
+  category        String          @default("DIGITAL_MARKETING") // DIGITAL_MARKETING, TRAVEL, CONSULTING, ECOMMERCE, SAAS, OTHER
+  industry        String?         // e.g., Healthcare, Education, Retail
+  website         String?
+  teamSize        String?         // e.g., 1-10, 11-50, 51-200
+
+  // Location
+  address         String?
+  city            String?
+  state           String?
+  country         String?         @default("India")
+  timezone        String?
+
+  // Lead Information
+  leadSource      String?         // e.g., Website, Referral, Social Media, Cold Outreach
+  referredBy      String?
+
+  status          String          @default("LEAD") // LEAD, PROSPECT, NEGOTIATION, ACTIVE, ON_HOLD, COMPLETED, LOST
+  statusReason    String?         // Why in this status (e.g., "Waiting for budget approval")
+
+  // Financial (INR by default)
   contractValue   Float           @default(0)
   paidAmount      Float           @default(0)
-  currency        String          @default("USD")
+  pendingAmount   Float           @default(0)
+  currency        String          @default("INR")
+  paymentTerms    String?         // e.g., "50% advance, 50% on completion"
+  nextPaymentDate DateTime?
 
   // Dates
   firstContact    DateTime        @default(now())
   lastContact     DateTime        @default(now())
+  nextFollowUp    DateTime?
   expectedClose   DateTime?
   contractStart   DateTime?
   contractEnd     DateTime?
 
-  // Engagement
+  // Engagement & Progress
   healthScore     Int             @default(50) // 0-100
   priority        String          @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  satisfactionScore Int?          // 1-10
+
+  // Deliverables & Progress
+  overallProgress Int             @default(0) // 0-100%
+  completedWork   String?         // What has been delivered/completed
+  pendingWork     String?         // What's yet to be done
+  currentMilestone String?        // Current phase/milestone
+
+  // Team Assignment
+  accountManager  String?         // Who manages this client
+  assignedTeam    String?         // JSON array of team members
+
+  // Communication Preferences
+  preferredContactMethod String?  // Email, Phone, WhatsApp, Meeting
+  communicationFrequency String?  // Daily, Weekly, Bi-weekly
+  bestTimeToContact String?       // Morning, Afternoon, Evening
 
   // Metadata
   tags            String?         // JSON array of tags
   customFields    String?         // JSON object for custom fields
   notes           String?
+  internalNotes   String?         // Private notes not shown to client
 
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
@@ -53,17 +94,44 @@ model Client {
   @@index([status])
   @@index([category])
   @@index([healthScore])
+  @@index([nextFollowUp])
 }
 
 model Task {
   id              String          @id @default(cuid())
   title           String
   description     String?
-  status          String          @default("TODO") // TODO, IN_PROGRESS, REVIEW, COMPLETED, CANCELLED
+  status          String          @default("TODO") // TODO, IN_PROGRESS, BLOCKED, REVIEW, COMPLETED, CANCELLED
   priority        String          @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
 
+  // Assignment & Ownership
+  assignedTo      String?         // Team member responsible
+  assignedBy      String?         // Who created/assigned this task
+
+  // Time Tracking
   dueDate         DateTime?
+  startDate       DateTime?
   completedAt     DateTime?
+  estimatedHours  Float?
+  actualHours     Float?
+
+  // Progress Tracking
+  progress        Int             @default(0) // 0-100%
+  completedWork   String?         // What has been done so far
+  pendingWork     String?         // What's remaining to be done
+  nextAction      String?         // What needs to happen next
+  blockingIssue   String?         // What's preventing progress
+  dependencies    String?         // What this task depends on
+
+  // Client Communication
+  requiresClientInput Boolean       @default(false)
+  clientFeedback  String?         // Client's comments/feedback
+  lastClientUpdate DateTime?      // When client was last updated
+
+  // Categories & Labels
+  taskType        String?         // e.g., Design, Development, Content, Meeting
+  category        String?         // Custom categorization
+  tags            String?         // JSON array of tags
 
   // Automation
   isRecurring     Boolean         @default(false)
@@ -71,11 +139,17 @@ model Task {
   reminderDate    DateTime?
   notificationSent Boolean        @default(false)
 
+  // Attachments & Links
+  attachments     String?         // JSON array of file references
+  relatedLinks    String?         // JSON array of URLs
+
   clientId        String
   client          Client          @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
   projectId       String?
   project         Project?        @relation(fields: [projectId], references: [id])
+
+  notes           String?         // Additional notes
 
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
@@ -83,6 +157,8 @@ model Task {
   @@index([status])
   @@index([dueDate])
   @@index([clientId])
+  @@index([assignedTo])
+  @@index([priority])
 }
 
 model Project {

@@ -29,18 +29,14 @@ After creating the database:
    POSTGRES_URL_NON_POOLING="postgres://default:xxx@xxx.postgres.vercel-storage.com:5432/verceldb"
    ```
 
-### 3. Add Environment Variables to Vercel
+### 3. Add Environment Variable to Vercel
 
 1. Go to your project settings: **Settings → Environment Variables**
-2. Add these two variables:
+2. Add this variable:
 
    **DATABASE_URL**
-   - Value: Copy the `POSTGRES_URL` value (with pooling)
-   - Environments: Production, Preview, Development
-
-   **DIRECT_URL**
-   - Value: Copy the `POSTGRES_URL_NON_POOLING` value
-   - Environments: Production, Preview, Development
+   - Value: Copy the `POSTGRES_URL` value (the one with connection pooling)
+   - Environments: ✅ Production, ✅ Preview, ✅ Development
 
 3. Click **Save**
 
@@ -87,7 +83,6 @@ For local development, you can:
 3. Update `.env.local`:
    ```
    DATABASE_URL="postgresql://user:password@localhost:5432/mydb"
-   DIRECT_URL="postgresql://user:password@localhost:5432/mydb"
    ```
 4. Run `npm run db:push` to create tables
 5. Run `npm run dev`

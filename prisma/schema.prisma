@@ -4,11 +4,12 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-// Using String instead of enums for SQLite compatibility
+// Using String instead of enums for PostgreSQL compatibility (works with Vercel)
 
 model Client {
   id              String          @id @default(cuid())

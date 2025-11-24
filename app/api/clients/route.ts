@@ -138,8 +138,14 @@ export async function POST(request: NextRequest) {
     })
 
     return NextResponse.json(client, { status: 201 })
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating client:', error)
-    return NextResponse.json({ error: 'Failed to create client' }, { status: 500 })
+    console.error('Error message:', error.message)
+    console.error('Error stack:', error.stack)
+    return NextResponse.json({
+      error: 'Failed to create client',
+      details: error.message,
+      code: error.code
+    }, { status: 500 })
   }
 }

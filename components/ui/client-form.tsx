@@ -125,11 +125,13 @@ export function ClientForm({ open, onOpenChange, onSuccess, initialData }: Clien
         onOpenChange(false)
         if (onSuccess) onSuccess()
       } else {
-        alert('Failed to save client')
+        const errorData = await res.json().catch(() => ({}))
+        console.error('Failed to save client:', errorData)
+        alert(`Failed to save client: ${errorData.details || errorData.error || 'Unknown error'}`)
       }
     } catch (error) {
       console.error('Error saving client:', error)
-      alert('Failed to save client')
+      alert(`Failed to save client: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setLoading(false)
     }

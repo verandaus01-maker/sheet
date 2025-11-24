@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { calculateHealthScore } from '@/lib/utils'
+import { ensureDatabase } from '@/lib/db-init'
 
 export async function GET(request: NextRequest) {
   try {
@@ -59,6 +60,9 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Ensure database is initialized
+    await ensureDatabase()
+
     const body = await request.json()
 
     const client = await prisma.client.create({
@@ -142,6 +146,16 @@ export async function POST(request: NextRequest) {
     console.error('Error creating client:', error)
     console.error('Error message:', error.message)
     console.error('Error stack:', error.stack)
+
+    // Check if it's a schema/column error
+    if (error.message?.includes('no such column') || error.message?.includes('table') || error.code === 'P2010') {
+      return NextResponse.json({
+        error: 'Database schema outdated',
+        details: 'The database schema needs to be updated. Please run "npm run db:push" locally or wait for the next deployment to auto-sync the schema.',
+        technicalDetails: error.message
+      }, { status: 500 })
+    }
+
     return NextResponse.json({
       error: 'Failed to create client',
       details: error.message,

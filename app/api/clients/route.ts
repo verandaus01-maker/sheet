@@ -63,21 +63,67 @@ export async function POST(request: NextRequest) {
 
     const client = await prisma.client.create({
       data: {
+        // Basic Information
         name: body.name,
         company: body.company,
         email: body.email,
         phone: body.phone,
+        alternatePhone: body.alternatePhone,
+        whatsapp: body.whatsapp,
+
+        // Business Details
         category: body.category || 'DIGITAL_MARKETING',
+        industry: body.industry,
+        website: body.website,
+        teamSize: body.teamSize,
+
+        // Location
+        address: body.address,
+        city: body.city,
+        state: body.state,
+        country: body.country || 'India',
+
+        // Lead Information
+        leadSource: body.leadSource,
+        referredBy: body.referredBy,
+
+        // Status & Priority
         status: body.status || 'LEAD',
+        statusReason: body.statusReason,
+        priority: body.priority || 'MEDIUM',
+
+        // Financial (INR by default)
         contractValue: body.contractValue || 0,
         paidAmount: body.paidAmount || 0,
-        currency: body.currency || 'USD',
+        pendingAmount: body.pendingAmount || 0,
+        currency: body.currency || 'INR',
+        paymentTerms: body.paymentTerms,
+        nextPaymentDate: body.nextPaymentDate ? new Date(body.nextPaymentDate) : null,
+
+        // Important Dates
+        nextFollowUp: body.nextFollowUp ? new Date(body.nextFollowUp) : null,
         expectedClose: body.expectedClose ? new Date(body.expectedClose) : null,
         contractStart: body.contractStart ? new Date(body.contractStart) : null,
         contractEnd: body.contractEnd ? new Date(body.contractEnd) : null,
-        priority: body.priority || 'MEDIUM',
+
+        // Progress & Deliverables
+        overallProgress: body.overallProgress || 0,
+        completedWork: body.completedWork,
+        pendingWork: body.pendingWork,
+        currentMilestone: body.currentMilestone,
+
+        // Team Assignment
+        accountManager: body.accountManager,
+
+        // Communication Preferences
+        preferredContactMethod: body.preferredContactMethod,
+        communicationFrequency: body.communicationFrequency,
+        bestTimeToContact: body.bestTimeToContact,
+
+        // Notes
         tags: body.tags ? JSON.stringify(body.tags) : null,
         notes: body.notes,
+        internalNotes: body.internalNotes,
       },
     })
 

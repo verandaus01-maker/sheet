@@ -52,13 +52,23 @@ export async function PATCH(
       return NextResponse.json({ error: 'Client not found' }, { status: 404 })
     }
 
+    // Convert date strings to Date objects
+    const updateData: any = { ...body }
+
+    // Handle date fields
+    if (body.nextPaymentDate) updateData.nextPaymentDate = new Date(body.nextPaymentDate)
+    if (body.nextFollowUp) updateData.nextFollowUp = new Date(body.nextFollowUp)
+    if (body.expectedClose) updateData.expectedClose = new Date(body.expectedClose)
+    if (body.contractStart) updateData.contractStart = new Date(body.contractStart)
+    if (body.contractEnd) updateData.contractEnd = new Date(body.contractEnd)
+
+    // Always update these
+    updateData.lastContact = new Date()
+    updateData.updatedAt = new Date()
+
     const client = await prisma.client.update({
       where: { id: params.id },
-      data: {
-        ...body,
-        lastContact: new Date(),
-        updatedAt: new Date(),
-      },
+      data: updateData,
     })
 
     // Log status change
